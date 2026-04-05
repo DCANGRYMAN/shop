@@ -3,14 +3,18 @@ const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Serve os arquivos da pasta atual ou da pasta 'dist/build' 
-// Ajuste o nome da pasta conforme a estrutura do seu projeto
-app.use(express.static(path.join(__dirname, 'public')));
+// 1. Primeiro, tenta servir arquivos reais (CSS, JS, Imagens) da pasta 'public'
+app.use(express.static(path.join(__dirname, '')));
 
-app.get('*', (req, res) => {
-  res.sendFile(path.resolve(__dirname, 'public', 'index.html'));
+// 2. Fallback: Se o Express não achou um arquivo real acima, 
+// ele cai neste middleware que envia o index.html.
+// Isso resolve o problema das rotas do lado do cliente (SPA) sem usar regex.
+app.use((req, res) => {
+  res.sendFile(path.join(__dirname, '', 'index.html'));
 });
 
 app.listen(PORT, () => {
-  console.log(`Servidor rodando na porta ${PORT}`);
+  console.log(`Servidor rodando em http://localhost:${PORT}`);
 });
+
+module.exports = app;
