@@ -3,17 +3,31 @@ const path = require('path');
 
 const app = express();
 
-const basePath = process.cwd();
+// 🔥 caminho correto no serverless
+const basePath = __dirname;
 
-// servir assets corretamente
+// logs (opcional)
+app.use((req, res, next) => {
+  console.log('REQ:', req.url);
+  next();
+});
+
+// 🔥 assets primeiro
 app.use('/assets', express.static(path.join(basePath, 'assets')));
 
-// servir arquivos da raiz
+// 🔥 arquivos estáticos
 app.use(express.static(basePath));
 
-// fallback SPA
+// 🔥 fallback SPA
 app.get('*', (req, res) => {
-  res.sendFile(path.join(basePath, 'index.html'));
+  const filePath = path.join(basePath, 'index.html');
+
+  res.sendFile(filePath, (err) => {
+    if (err) {
+      console.error('ERRO REAL:', err);
+      res.status(500).send('Erro interno');
+    }
+  });
 });
 
 module.exports = app;

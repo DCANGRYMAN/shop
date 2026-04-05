@@ -2,7 +2,7 @@
   "name": "curiouxshop.lovable.app",
   "version": "1.0.0",
   "description": "",
-  "main": "~flock.js",
+  "main": "~flockck.js",
   "scripts": {
     "start": "node server.js"
   },
