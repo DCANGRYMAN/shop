@@ -3,28 +3,15 @@ const path = require('path');
 
 const app = express();
 
-// 🔥 caminho seguro no Vercel
-const basePath = process.cwd();
+// 🔥 caminho correto relativo ao arquivo
+const basePath = path.resolve(__dirname);
 
-// Log pra debug
-app.use((req, res, next) => {
-  console.log('REQ:', req.url);
-  next();
-});
-
-// Static
+// Static (ajuste se tiver /dist ou /build)
 app.use(express.static(basePath));
 
-// SPA fallback (CRÍTICO)
+// SPA fallback
 app.get('*', (req, res) => {
-  const filePath = path.join(basePath, 'index.html');
-
-  res.sendFile(filePath, (err) => {
-    if (err) {
-      console.error('Erro ao enviar index.html:', err);
-      res.status(500).send('Erro interno');
-    }
-  });
+  res.sendFile(path.join(basePath, 'index.html'));
 });
 
 module.exports = app;
